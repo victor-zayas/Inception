@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+    nginx:
+        depends_on:
+            - wordpress
+        container_name: nginx
+        build: ./requirements/nginx/
+        image: nginx
+        ports:
+            - "443:443"
+        restart: always
+        env_file: .env
+        networks:
+            - docker_network
+        volumes:
+            - wordpress_volume:/var/www/html/
+
+
+
+networks:
+        docker_network:
+                driver: bridge
