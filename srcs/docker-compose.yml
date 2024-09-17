@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
     nginx:
@@ -15,9 +14,35 @@ services:
             - docker_network
         volumes:
             - wordpress_volume:/var/www/html/
+    mariadb:
+        container_name: mariadb
+        build: ./requirements/mariadb/
+        image: mariadb
+        ports:
+            - "3306:3306"
+        restart: always
+        env_file: .env
+        networks:
+            - docker_network
+        volumes:
+            - mariadb_volume:/var/lib/mysql/
+    wordpress:
+        container_name: wordpress
+        build: ./requirements/wordpress
+        image: wordpress
+        ports:
+            - "9000:9000"
+        restart: always
+        env_file: .env
+        networks:
+            - docker_network
+        volumes:
+            - wordpress_volume:/var/www/wordpress/
 
-
+volumes:
+        wordpress_volume:
+        mariadb_volume:
 
 networks:
-        docker_network:
-                driver: bridge
+    docker_network:
+        driver: bridge
