@@ -14,4 +14,4 @@ RUN sed -i 's/^pid = \/run\/php\/php7\.4-fpm\.pid$/pid = \/var\/run\/php-fpm7.4.
 
 CMD ["sh", "-c", "./tmp/start.sh && /usr/sbin/php-fpm7.4 -F"]
 
-# CMD ["sh", "-c", "./tmp/start.sh && /usr/sbin/php-fpm7.4 -F & tail -f /dev/null"]
+#CMD ["sh", "-c", "./tmp/start.sh && /usr/sbin/php-fpm7.4 -F & tail -f /dev/null"]
