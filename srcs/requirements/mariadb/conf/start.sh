@@ -1,6 +1,6 @@
 chown -R mariadb /var/lib/mariadb
 
-sed -i "s/^bind-address\s*=.*$/#bind-address = 127.0.0.1/" /etc/mariadb/mariadb.conf.d/50-server.cnf
+sed -i "s/^bind-address\s*=.*$/#bind-address = 0.0.0.0/" /etc/mariadb/mariadb.conf.d/50-server.cnf
 sed -i "s/skip-networking/#skip-networking/g" /etc/mariadb/mariadb.conf.d/50-server.cnf
 
 # Configurar puerto en my.cnf

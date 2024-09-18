@@ -10,8 +10,17 @@ RUN apt-get update && apt -y install curl wget netcat tar iputils-ping mariadb-c
 
 COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/
 
+RUN mkdir -p /run/php
+
+#RUN mkdir -p /home/$(USER)/data
+
+COPY ./conf/start.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/start.sh
+
 RUN sed -i 's/^pid = \/run\/php\/php7\.4-fpm\.pid$/pid = \/var\/run\/php-fpm7.4.pid/' /etc/php/7.4/fpm/php-fpm.conf
 
-CMD ["sh", "-c", "./tmp/start.sh && /usr/sbin/php-fpm7.4 -F"]
+#CMD ["sh", "-c", "./tmp/start.sh && /usr/sbin/php-fpm7.4 -F"]
 
-#CMD ["sh", "-c", "./tmp/start.sh && /usr/sbin/php-fpm7.4 -F & tail -f /dev/null"]
+CMD ["sh", "-c", "./tmp/start.sh && /usr/sbin/php-fpm7.4 -F & tail -f /dev/null"]
+
+#ENTRYPOINT ["/usr/local/bin/start.sh"]
