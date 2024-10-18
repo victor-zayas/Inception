@@ -18,8 +18,6 @@ services:
         container_name: mariadb
         build: ./requirements/mariadb/
         image: mariadb
-        ports:
-            - "3306:3306"
         restart: always
         env_file: .env
         networks:
@@ -30,8 +28,6 @@ services:
         container_name: wordpress
         build: ./requirements/wordpress
         image: wordpress
-        ports:
-            - "9000:9000"
         restart: always
         env_file: .env
         networks:
@@ -40,8 +36,18 @@ services:
             - wordpress_volume:/var/www/wordpress/
 
 volumes:
-        wordpress_volume: /home/$(USER)/data/
-        mariadb_volume: /home/$(USER)/data/
+  wordpress_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/${USER}/data/wordpress
+      o: bind
+  mariadb_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/${USER}/data/mariadb
+      o: bind
 
 networks:
     docker_network:

@@ -1,9 +1,15 @@
 FROM debian:bullseye
 
-COPY ./tools/setup.sh /tmp/
-COPY ./conf/start.sh /tmp/
+COPY ./tools/setup.sh /mtg/
+COPY ./conf/start.sh /mtg/
+COPY ./tools/50-server.cnf /etc/mysql/mariadb.conf.d
 
-RUN apt-get update && apt-get install -y mariadb-server && service mariadb start
-RUN chmod +x /tmp/setup.sh && chmod +x /tmp/start.sh && ./tmp/start.sh
+RUN apt-get update && apt-get install -y mariadb-server && mkdir -p /var/run/mysqld && \
+    chown -R mysql:mysql /var/run/mysqld && chown -R mysql:mysql /etc/mysql/
 
-CMD ["sh","-c", "./tmp/setup.sh > /tmp/setup.sql && mysqld --init-file=/tmp/setup.sql"]
+RUN chmod +x /mtg/setup.sh && chmod +x /mtg/start.sh && ./mtg/start.sh
+RUN chmod +x /etc/mysql/mariadb.conf.d/50-server.cnf
+
+EXPOSE 3306
+
+CMD ["sh","-c", "./mtg/setup.sh > /mtg/setup.sql && mysqld --init-file=/mtg/setup.sql"]
