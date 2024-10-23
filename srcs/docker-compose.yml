@@ -1,10 +1,10 @@
 
 services:
     nginx:
-        depends_on:
-            - wordpress
         container_name: nginx
         build: ./requirements/nginx/
+        depends_on:
+            - wordpress
         image: nginx
         ports:
             - "443:443"
@@ -13,7 +13,7 @@ services:
         networks:
             - docker_network
         volumes:
-            - wordpress_volume:/var/www/html/
+            - wordpress:/var/www/html/
     mariadb:
         container_name: mariadb
         build: ./requirements/mariadb/
@@ -23,7 +23,7 @@ services:
         networks:
             - docker_network
         volumes:
-            - mariadb_volume:/var/lib/mysql/
+            - mariadb:/var/lib/mysql/
     wordpress:
         container_name: wordpress
         build: ./requirements/wordpress
@@ -33,16 +33,16 @@ services:
         networks:
             - docker_network
         volumes:
-            - wordpress_volume:/var/www/wordpress/
+            - wordpress:/var/www/html/
 
 volumes:
-  wordpress_volume:
+  wordpress:
     driver: local
     driver_opts:
       type: none
       device: /home/${USER}/data/wordpress
       o: bind
-  mariadb_volume:
+  mariadb:
     driver: local
     driver_opts:
       type: none
