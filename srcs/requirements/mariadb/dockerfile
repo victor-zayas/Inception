@@ -12,6 +12,17 @@ COPY    tools/mysql.cnf /etc/mysql
 RUN     chown -R mysql:mysql /tmp/ && \
         chown -R mysql:mysql /etc/mysql
 
+# Crear un script para inicializar MariaDB
+RUN echo '#!/bin/bash\n\
+# Eliminar archivos de registro de InnoDB\n\
+rm -f /var/lib/mysql/ib_logfile0 /var/lib/mysql/ib_logfile1\n\
+# Establecer el motor de almacenamiento por defecto a MyISAM\n\
+echo "[mysqld]\n\
+default-storage-engine=MyISAM" >> /etc/mysql/my.cnf\n\
+# Ejecutar el script de creación de la base de datos\n\
+exec /tmp/createDB.sh' > /tmp/init-mariadb.sh && \
+chmod +x /tmp/init-mariadb.sh
+
 USER    mysql
 
 EXPOSE 3306
