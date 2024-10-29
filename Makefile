@@ -10,7 +10,7 @@ down:
 
 clean: down
 	docker system prune -af
-	docker volume rm mariadb wordpress
+	docker volume prune -f
 	sudo rm -rf /home/$(USER)/data/mariadb /home/$(USER)/data/wordpress
 #	sudo rm -rf /workspaces/data/mariadb /workspaces/data/wordpress
 

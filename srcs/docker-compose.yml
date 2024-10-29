@@ -1,20 +1,22 @@
 
 services:
-  nginx:
-    container_name: nginx
+  mariadb:
+    container_name: mariadb
     build:
-      context: ./requirements/nginx
+      context: ./requirements/mariadb
       dockerfile: Dockerfile
-    depends_on:
-      - wordpress
-    image: nginx:1.0
+    image: mariadb:1.0
+    env_file: .env
     volumes:
-      - wordpress:/var/www/html
-    ports:
-      - "443:443"
+      - mariadb:/var/lib/mysql
     restart: always
     networks:
       - inception
+    # healthcheck:
+    #   test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+    #   interval: 10s
+    #   timeout: 10s
+    #   retries: 2
 
   wordpress:
     container_name: wordpress
@@ -31,15 +33,18 @@ services:
     networks:
       - inception
 
-  mariadb:
-    container_name: mariadb
+  nginx:
+    container_name: nginx
     build:
-      context: ./requirements/mariadb
+      context: ./requirements/nginx
       dockerfile: Dockerfile
-    image: mariadb:1.0
-    env_file: .env
+    depends_on:
+      - wordpress
+    image: nginx:1.0
     volumes:
-      - mariadb:/var/lib/mysql
+      - wordpress:/var/www/html
+    ports:
+      - "443:443"
     restart: always
     networks:
       - inception
