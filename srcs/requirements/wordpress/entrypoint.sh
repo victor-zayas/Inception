@@ -25,11 +25,11 @@ wp core install --url=$DOMAIN_NAME/ --title=$WP_TITLE --admin_user=$WP_ADMIN_USE
 wp user create $WP_USER --role=author --user_pass=$WP_PASSWORD --allow-root
 
 # Crear wp-config.php a partir de wp-config-sample.php
-cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+mv /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
 
 # Asegurar permisos correctos
 chown www-data:www-data /var/www/html/wp-config.php
-chmod 644 /var/www/html/wp-config.php
+chmod 755 /var/www/html/wp-config.php
 
 # editar el archivo de configuracion de wordpress con las variables de entorno
 sed -i -r "s/database_name_here/$DB_NAME/1"   wp-config.php
