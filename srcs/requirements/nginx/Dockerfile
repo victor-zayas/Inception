@@ -1,23 +1,20 @@
-# Selecting the image
 FROM debian:bullseye
 
-# Update and install necessary packages and remove the cache in order to make the image smaller
-RUN apt-get update && \
-    apt-get install -y nginx openssl && \
-    rm -fr /var/lib/apt/lists/*
+RUN apt -y update && apt install -y \
+	nginx \
+	openssl
 
-# Generate openssl key and certificate
-RUN openssl genrsa -out /etc/nginx/server.key && \
-    openssl req -new -key /etc/nginx/server.key -subj "/CN=empenadas" -out /etc/nginx/server.csr && \
-    openssl x509 -req -days 365 -in /etc/nginx/server.csr -signkey /etc/nginx/server.key -out /etc/nginx/server.crt
-RUN openssl genrsa -out /etc/nginx/server.key && \
-    openssl req -new -key /etc/nginx/server.key -subj "/CN=empenadas" -out /etc/nginx/server.csr && \
-    openssl x509 -req -days 365 -in /etc/nginx/server.csr -signkey /etc/nginx/server.key -out /etc/nginx/server.crt
+RUN mkdir -p /etc/nginx/ssl
 
-# Set nginx configuration
-COPY ./tools/conf/nginx.conf /etc/nginx/nginx.conf
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+	-out /etc/ssl/nginx-selfsigned.pem \
+	-keyout /etc/ssl/nginx-selfsigned.key \
+	-subj "/C=ES/ST=Bizkaia/L=Urduliz/O=42/OU=42/CN=vzayas-s.42.fr"
 
-# Expose ports
-EXPOSE 443
+COPY ./conf/nginx.conf /etc/nginx/conf.d/default.conf
 
-ENTRYPOINT nginx -g "daemon off;"
+#COPY ./conf/default /etc/nginx/sites-available/default
+
+EXPOSE	443
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

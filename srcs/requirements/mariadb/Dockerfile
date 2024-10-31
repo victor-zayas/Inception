@@ -1,29 +1,14 @@
-FROM    debian:bullseye
+FROM debian:bullseye
 
-RUN     apt-get update -y
-RUN     apt-get upgrade -y
+RUN apt update && apt install -y \
+	mariadb-server
 
-RUN     apt-get install -y mariadb-server
-RUN     apt-get install mariadb-client -y
-        
+COPY ./conf/mdb_conf.sh /mdb_conf.sh
 
-RUN     mkdir -p /var/run/mysqld && \
-        chown -R mysql:mysql /var/run/mysqld && chown -R mysql:mysql /etc/mysql && \
-        rm -rf /var/lib/apt/lists/*
-
-COPY    tools/createdb.sh /tmp/
-COPY    tools/init.sql /tmp/
-COPY    tools/config.cnf /etc/mysql
-
-RUN     chown -R mysql:mysql /tmp/ && \
-        chown -R mysql:mysql /etc/mysql
-
-ENTRYPOINT ["sh", "/tmp/createdb.sh"]
-
-USER    mysql
+RUN chmod +x /mdb_conf.sh
 
 EXPOSE 3306
 
-
+ENTRYPOINT ["./mdb_conf.sh"]
 
 CMD ["mysql", "--bind-address=0.0.0.0"]
