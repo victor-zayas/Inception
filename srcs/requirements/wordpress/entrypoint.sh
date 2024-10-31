@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sleep 5
 # create directory to use in nginx container later and also to setup the wordpress conf
 mkdir -p /var/www/html
 cd /var/www/html
@@ -16,6 +17,7 @@ cd /var/www/html
 
 # downloads the latest version of WordPress to the current directory. The --allow-root flag allows the command to be run as the root user, which is necessary if you are logged in as the root user or if you are using WP-CLI with a system-level installation of WordPress.
 wp core download --allow-root
+
 wp config create --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASSWORD --dbhost=mariadb --allow-root
 
 # installs WordPress and sets up the basic configuration for the site. The --url option specifies the URL of the site, --title sets the site's title, --admin_user and --admin_password set the username and password for the site's administrator account. The --skip-email flag prevents WP-CLI from sending an email to the administrator with the login details.
@@ -25,11 +27,11 @@ wp core install --url=$DOMAIN_NAME/ --title=$WP_TITLE --admin_user=$WP_ADMIN_USE
 wp user create $WP_USER --role=author --user_pass=$WP_PASSWORD --allow-root
 
 # Crear wp-config.php a partir de wp-config-sample.php
-mv /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+#mv /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
 
 # Asegurar permisos correctos
-chown www-data:www-data /var/www/html/wp-config.php
-chmod 755 /var/www/html/wp-config.php
+#chown www-data:www-data /var/www/html/wp-config.php
+#chmod 755 /var/www/html/wp-config.php
 
 # editar el archivo de configuracion de wordpress con las variables de entorno
 sed -i -r "s/database_name_here/$DB_NAME/1"   wp-config.php

@@ -11,9 +11,9 @@ fi
 
 service mysql start
 
-service mysql restart
+#service mysql restart
 
-kill $(cat /var/run/mysqld/mysqld.pid)
+#kill $(cat /var/run/mysqld/mysqld.pid)
 
 
 mysqld
